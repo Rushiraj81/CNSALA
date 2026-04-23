@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WDF Practical Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(-45deg, #10b981, #3b82f6, #8b5cf6, #ec4899);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            color: #1e293b;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        @keyframes gradientBG {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        body::before,
+        body::after {
+            content: '';
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            filter: blur(100px);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        body::before {
+            background: rgba(255, 255, 255, 0.4);
+            top: -150px;
+            left: -150px;
+        }
+
+        body::after {
+            background: rgba(255, 255, 255, 0.3);
+            bottom: -150px;
+            right: -150px;
+        }
+
+        .dashboard-container {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            border-radius: 32px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25), inset 0 0 0 2px rgba(255, 255, 255, 0.4);
+            width: 100%;
+            max-width: 960px;
+            padding: 3.5rem;
+            position: relative;
+            z-index: 1;
+            animation: slideIn 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+        }
+
+        @keyframes slideIn {
+            0% {
+                transform: translateY(40px);
+                opacity: 0;
+            }
+
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3.5rem;
+        }
+
+        .uni-logo {
+            height: 70px;
+            width: auto;
+            margin: 0 auto 1.5rem;
+            display: block;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.1));
+        }
+
+        .uni-logo:hover {
+            transform: scale(1.05);
+        }
+
+        .uni-name {
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            color: #64748b;
+            margin-bottom: 0.75rem;
+            font-weight: 700;
+        }
+
+        .title {
+            font-size: 2.75rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #1e293b, #3b82f6, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1.5rem;
+            letter-spacing: -1px;
+        }
+
+        .badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #8b5cf6, #ec4899);
+            color: white;
+            padding: 0.6rem 1.8rem;
+            border-radius: 9999px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            box-shadow: 0 8px 20px rgba(236, 72, 153, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .student-info {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 2.5rem;
+            margin-bottom: 3.5rem;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .student-info:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(31, 38, 135, 0.08);
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            position: relative;
+        }
+
+        .info-item::before {
+            content: '';
+            position: absolute;
+            left: -20px;
+            top: 5px;
+            bottom: 5px;
+            width: 6px;
+            border-radius: 6px;
+        }
+
+        .info-item:nth-child(1)::before {
+            background: #10b981;
+        }
+
+        .info-item:nth-child(2)::before {
+            background: #3b82f6;
+        }
+
+        .info-item:nth-child(3)::before {
+            background: #8b5cf6;
+        }
+
+        .info-item:nth-child(4)::before {
+            background: #ec4899;
+        }
+
+        .info-label {
+            font-size: 0.85rem;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 800;
+        }
+
+        .info-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .activities-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 2rem;
+        }
+
+        .activity-card {
+            background: white;
+            border-radius: 24px;
+            padding: 2.2rem;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+            border: 1px solid rgba(241, 245, 249, 1);
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .activity-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 24px;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .activity-card:nth-child(1)::after {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.05), rgba(139, 92, 246, 0.05));
+        }
+
+        .activity-card:nth-child(2)::after {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.05), rgba(59, 130, 246, 0.05));
+        }
+
+        .activity-card:nth-child(3)::after {
+            background: linear-gradient(135deg, rgba(236, 72, 153, 0.05), rgba(139, 92, 246, 0.05));
+        }
+
+        .activity-card:hover {
+            transform: translateY(-12px) scale(1.02);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.12);
+            border-color: transparent;
+        }
+
+        .activity-card:hover::after {
+            opacity: 1;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .activity-card:nth-child(1) .card-icon {
+            background: rgba(59, 130, 246, 0.1);
+            color: #3b82f6;
+        }
+
+        .activity-card:nth-child(2) .card-icon {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+        }
+
+        .activity-card:nth-child(3) .card-icon {
+            background: rgba(236, 72, 153, 0.1);
+            color: #ec4899;
+        }
+
+        .activity-card:hover .card-icon {
+            transform: scale(1.15) rotate(10deg);
+        }
+
+        .card-icon svg {
+            width: 32px;
+            height: 32px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .card-tag {
+            font-size: 0.85rem;
+            font-weight: 800;
+            padding: 0.5rem 1.2rem;
+            border-radius: 12px;
+            letter-spacing: 1px;
+        }
+
+        .activity-card:nth-child(1) .card-tag {
+            color: white;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+
+        .activity-card:nth-child(2) .card-tag {
+            color: white;
+            background: linear-gradient(135deg, #10b981, #3b82f6);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .activity-card:nth-child(3) .card-tag {
+            color: white;
+            background: linear-gradient(135deg, #ec4899, #8b5cf6);
+            box-shadow: 0 4px 12px rgba(236, 72, 153, 0.3);
+        }
+
+        .card-title {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .card-desc {
+            font-size: 1rem;
+            color: #64748b;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .dashboard-container {
+                padding: 2.5rem 1.5rem;
+                border-radius: 24px;
+            }
+
+            .title {
+                font-size: 2.1rem;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+                padding-left: 20px;
+            }
+
+            .info-item::before {
+                top: 0;
+                bottom: 0;
+                width: 4px;
+                left: -15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <header class="header">
+            <img src="https://gmiu.edu.in/gmiu/website_assets/images/gmiulogo.png"
+                alt="Gyanmanjari Innovative University" class="uni-logo">
+            <div class="uni-name" style="display: none;">Gyanmanjari Innovative University</div>
+            <h1 class="title">Gyanmanjari Innovative University</h1>
+            <div class="badge">Active Learning Activities</div>
+        </header>
+
+        <section class="student-info">
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">Student Name</span>
+                    <span class="info-value">GOHIL RUSHIRAJSINH VIKRAMSINH</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Enrollment Number</span>
+                    <span class="info-value">20230905090060</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Subject Name</span>
+                    <span class="info-value">Cryptography and Network Security</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Subject Code</span>
+                    <span class="info-value">BETIT16326</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="activities-section">
+            <a href="ala1.html" class="activity-card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                            <path d="M9 12l2 2 4-4" />
+                        </svg>
+                    </div>
+                    <span class="card-tag">ALA-1</span>
+                </div>
+                <div>
+                    <h3 class="card-title">Digital Signature</h3>
+                    <p class="card-desc">Understand and implement digital signature concepts for secure electronic
+                        communication.
+                    </p>
+                </div>
+            </a>
+
+          <a href="ala2.html" class="activity-card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path
+                                d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+                            <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+                            <line x1="12" y1="22.08" x2="12" y2="12" />
+                        </svg>
+                    </div>
+                    <span class="card-tag">ALA-2</span>
+                </div>
+                <div>
+                    <h3 class="card-title">Data Integrity</h3>
+                    <p class="card-desc">Explore cryptographic hash functions and maintain data integrity standards
+                        efficiently.
+                    </p>
+                </div>
+            </a>
+
+           <a href="ala3.html" class="activity-card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                        </svg>
+                    </div>
+                    <span class="card-tag">ALA-3</span>
+                </div>
+                <div>
+                    <h3 class="card-title">Authentication</h3>
+                    <p class="card-desc">Design and create secure user authentication mechanisms to protect sensitive
+                        data.</p>
+                </div>
+            </a>
+           
+        </section>
+        
+    </div>
+</body>
+
+</html>
